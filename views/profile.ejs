@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>  
+  <script type="text/javascript">
+  $(document).ready(function(){
+    $("#regBtn").click(function(){
+        $.ajax({
+          type : 'GET',
+          url : '/register',
+          success: function(data){
+            $("#regDiv").html(data);
+          }
+        });
+    });
+    $("#loginBtn").click(function(){
+        console.log('test')
+        console.log('test')
+        $.ajax({
+          type : 'GET',
+          url : '/login',
+          success: function(data){
+            $("#loginDiv").html(data);
+          }
+        });
+    });
+    //=====Login Form Request=============================================
+    $("#loginForm").click(function(){
+      var uname  = $("#uname").val();
+      var upass = $("#upass").val();
+      var loginData ={'name': uname,'pass':upass};
+      $.ajax({
+          type : 'POST',
+          url : '/demo',
+          data : loginData,
+          success: function(data){
+          $("#mainDiv").html(data);
+          }
+        });
+    });
+ //=====Register Form=============================================
+    $("#regForm").click(function(){
+      var uname  = $("#uname").val();
+      var upass = sha256($("#upass").val());
+      var regData ={'name': uname,'pass':upass};
+        $.ajax({
+          type : 'POST',
+          url : '/regiterToDb',
+          data : regData,
+          success: function(data){
+          $("#mainDiv").html(data);
+          }
+        });
+    });
+ //Save profile Data================================================
+ $('#saveBtn').click(function(){
+   var email = $("#email").val();
+   var phone = $("#phone").val();
+   var education = $("#education").val();
+   var aoi = $("#aoi").val();
+   var name = $("#name").val();
+   var pass = sha256($("#pass").val());
+   var level = $("#level").val();
+   var profileData = {'email':email,'phone':phone,'education' : education,'aoi':aoi,'name' : name,'pass' : pass,'level' : level};
+   $.ajax({
+     type : 'POST',
+     url : '/completeprofile',
+     data : profileData,
+     success : function(data){
+        $("#mainDiv").html(data);
+     }
+   });
+ });
+ });
+  </script>
+</head>
+<style>
+span{
+  font-size: 35px;
+  color: #ffff;
+  background-color: #2881DB;
+  padding: 10px;
+}
+</style>
+<script>
+</script>
+<body>
+<span>Hello <%= loginData.name %> ! Complete your profile
+  </span>
+  <input type="hidden" name="name" value=<%= loginData.name %> id ="name">
+  <input type="hidden" name="pass" value=<%= loginData.pass %> id = "pass">
+  <input type="hidden" name="level" value="user" id = "level">
+  <p>
+    <label class="w3-text-blue"><b>Email</b></label>
+    <input class="w3-input w3-border" name="email" type="text" id ="email"></p>
+    <p>
+    <label class="w3-text-blue" id = "pass"><b>Mobile Number</b></label>
+    <input class="w3-input w3-border" name="phone" type="text" id ="phone"></p>
+    <p>
+      <p>
+      <label class="w3-text-blue" id = "pass"><b>Education</b></label>
+      <input class="w3-input w3-border" name="education" type="text" id ="education"></p>
+      <p>
+      <label class="w3-text-blue" id = "pass"><b>Area of Intrest</b></label>
+      <input class="w3-input w3-border" name="aoi" type="text" id ="aoi"></p>
+      <p>
+    <button class="w3-btn w3-blue" id="saveBtn">Save</button></p>
+</body>
+</html>
