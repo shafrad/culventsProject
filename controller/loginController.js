@@ -8,6 +8,7 @@ var session = require('express-session');
 // }));
 // var MongoClient = require('mongodb').MongoClient;
 // var url = 'mongodb://localhost:27017/myproject';
+var authentication = require('./authentication');
 var User = require('../models/userprofile');
 
 // Authentication and Authorization Middleware
@@ -17,20 +18,7 @@ var User = require('../models/userprofile');
   //   else
   //     return res.sendStatus(401);
   // };
-  module.exports = auth = function(req, res, next) {
-    if (req.session && req.session.user === "admin" && req.session.admin){
-      return next();
-    }
-    else if (req.session && req.session.user) {
-      
-      return next();
-    }
-    else {
-    return res.sendStatus(401);
-  }
-  };
-  
-  
+
 router.get('/', function(req,res){
     res.render('home');
   });
@@ -53,12 +41,12 @@ router.get('/', function(req,res){
               req.session.user = req.body.name;
               console.log(req.session)
               if(req.session.user !== "admin"){
-                req.session.admin = false;
+                // req.session.admin = false;
                 req.session.userprofile = userprofile;                         
                 console.log("login success!");
               res.redirect('/content') 
               } else {
-                req.session.admin = true;
+                // req.session.admin = true;
                 req.session.userprofile = userprofile;                         
                 console.log("login success!");
                 res.redirect('/admin');
@@ -108,7 +96,7 @@ router.post('/regiterToDb',function(req,res){
       res.redirect('/');
     });
 
-    router.get('/content', auth, function (req, res) {
+    router.get('/content', authentication.authUsers, function (req, res) {
       // res.render("../views/front/pages/events", {events: events});
             
       res.render('completeprofile',{profileData:req.session.userprofile});

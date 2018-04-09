@@ -135,13 +135,13 @@ if (!req.params.id) return next(new Error('No article ID.'))
 // req.collections.articles.updateById(req.params.id, {$set: req.body.article}, (error, count) => {
 
 console.log('slamet sampe sini');
-req.collections.articles.updateById(req.params.id, {$set: { title: req.body.title, published: req.body.published, text: req.body.text}}, (err, articleOne) => {  
+Events.updateById(req.params.id, req.body, (err, event) => {  
     
     if (err) {
         console.log(err);
-        res.render("../views/articles/edit", {articles: articleOne});
+        res.render("../views/front/pages/eventsUpdate", {events: event});
       }
-      res.redirect("/show/"+req.params.id);
+      res.redirect("/admin");
     // if (error) return next(error)
     // res.send({affectedCount: count})
 })

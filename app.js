@@ -28,6 +28,7 @@ var url = 'mongodb://localhost:27017/myproject';
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var authentication = require('./controller/authentication');
 var loginController = require('./controller/loginController');
 const api = require(path.join(__dirname, 'routes/api'))
 

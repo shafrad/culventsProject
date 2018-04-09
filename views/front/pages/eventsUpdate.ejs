@@ -30,6 +30,28 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#editBtn").click(function(){
+                var email  = $("#email").val();
+                var phone = $("#phone").val();
+                var name = $("#name").val();
+                var jam = $("#jam").val();
+                var tanggal = $("#tanggal").val();
+                var tempat = $("#tempat").val();
+                var guestStar = $("#guestStar").val();            
+                var Data ={'email': email, 'phone': phone, 'name': name,'jam': jam, 'tanggal': tanggal, 'tempat': tempat, 'guestStar': guestStar};
+                $.ajax({
+                  type : 'POST',
+                  url : '/admin/edit/:id',
+                  data : Data,
+                  success: function(data){
+                    // $("#regDiv").html(data);
+                  }
+                });
+            });
+    </script>
+
 </head>
 
 <body>
