@@ -31,10 +31,11 @@ var users = require('./routes/users');
 var authentication = require('./controller/authentication');
 var loginController = require('./controller/loginController');
 const api = require(path.join(__dirname, 'routes/api'))
+const front = require(path.join(__dirname, 'routes/front'))
 
 var app = express();
 app.use(session({
-    secret: '2C44-4D44-WppQ38S',
+    secret: '2C44-4D44-WppQ38',
     resave: true,
     saveUninitialized: true
 }));
@@ -52,11 +53,15 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', loginController);
-app.get('/admin', api.article.list);
+app.get('/admin', authentication.authAdmin, api.article.list);
 app.post('/admin/tambah', api.article.tambah);
 app.get('/admin/update/:id', api.article.update);
 app.post('/admin/edit/:id', api.article.edit);
 app.post('/admin/delete/:id', api.article.del);
+app.get('/users', front.data.list);
+app.get('/users/1', front.data.show);
+app.get('/show/:id', front.data.showById);
+
 app.use('/', index);
 app.use('/users', users);
 
