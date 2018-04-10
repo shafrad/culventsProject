@@ -10,7 +10,6 @@
 //    , upload = multer({limits: {fileSize: 2000000 },dest:'./public/images'});
 // var app = require('../../app');
 var Events = require('../../models/events');
-var auth = require('../../controller/loginController');
 // GET articles API.
 exports.list = (request, result, next) => {
     //console.log("bbbbbbbbbbbbbbb");
@@ -149,8 +148,8 @@ Events.updateById(req.params.id, req.body, (err, event) => {
   
 // DELETE article API.
 exports.del = (req, res, next) => {
-if (!req.params.id) return next(new Error('No event ID.'))
-Events.removeById(req.params.id, (error) => {
+if (!req.params.id) return next(new Error('No event ID.'))       
+Events.findByIdAndRemove(req.params.id, (error) => {
     if (error) return next(error)
     // res.send({affectedCount: count})
     console.log("deleted!");
