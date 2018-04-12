@@ -53,14 +53,16 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', loginController);
-app.get('/admin', authentication.authAdmin, api.article.list);
+app.get('/admin', api.article.list);
 app.post('/admin/tambah', api.article.tambah);
 app.get('/admin/update/:id', api.article.update);
 app.post('/admin/edit/:id', api.article.edit);
 app.post('/admin/delete/:id', api.article.del);
 app.get('/users', front.data.list);
 app.get('/users/1', front.data.show);
-app.get('/show/:id', front.data.showById);
+app.get('/users/show/:id', front.data.showById);
+app.get('/users/registration', front.data.registerByEmail);
+// app.get('/show/:id/register', front.data.confirm);
 
 app.use('/', index);
 app.use('/users', users);
