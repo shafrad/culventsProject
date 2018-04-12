@@ -25,9 +25,9 @@
     });
     //=====Login Form Request=============================================
     $("#loginForm").click(function(){
-      var uname  = $("#uname").val();
+      var uemail = $("#email").val();
       var upass = sha256($("#upass").val());
-      var loginData ={'name': uname,'pass':upass};
+      var loginData ={'email': uemail,'pass':upass};
       console.log(loginData)
       $.ajax({
           type : 'POST',
@@ -76,8 +76,8 @@
 <body>
     <h2 class="w3-text-blue">Login Form</h2>
   <p>
-    <label class="w3-text-blue"><b>User Name</b></label>
-    <input class="w3-input w3-border" name="uname" type="text" id ="uname"></p>
+    <label class="w3-text-blue"><b>Email</b></label>
+    <input class="w3-input w3-border" name="email" type="text" id ="email"></p>
     <p>
     <label class="w3-text-blue" id = "pass"><b>Password</b></label>
     <input class="w3-input w3-border" name="pass" type="text" id ="upass"></p>
