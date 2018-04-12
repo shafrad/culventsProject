@@ -81,7 +81,7 @@
     <div class="container">
 
       <!-- Page Heading/Breadcrumbs -->
-      <h1 class="mt-4 mb-3"><%=events.name%>
+      <h1 class="mt-4 mb-3"><%=event.name%>
         <small>by
           <a href="#">Start Bootstrap</a>
         </small>
@@ -105,7 +105,7 @@
           <hr>
 
           <!-- Date/Time -->
-          <p>Posted on <%=events.tanggal%> at <%=events.jam%></p>
+          <p>Posted on <%=event.tanggal%> at <%=event.jam%></p>
 
           <hr>
 
@@ -126,7 +126,11 @@
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error, nostrum, aliquid, animi, ut quas placeat totam sunt tempora commodi nihil ullam alias modi dicta saepe minima ab quo voluptatem obcaecati?</p>
 
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Harum, dolor quis. Sunt, ut, explicabo, aliquam tenetur ratione tempore quidem voluptates cupiditate voluptas illo saepe quaerat numquam recusandae? Qui, necessitatibus, est!</p>
-
+          <% if (register) { %>
+          <a href="/users/registration"><button type="button" class="btn btn-outline-success" disabled>Register</button></a>
+          <% } else { %>
+          <a href="/users/registration"><button type="button" class="btn btn-outline-success">Register</button></a>
+          <% } %>
           <hr>
 
           <!-- Comments Form -->
