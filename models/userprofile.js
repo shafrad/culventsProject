@@ -9,7 +9,8 @@ var UserSchema = new mongoose.Schema({
   pass: {type: mongoose.Schema.Types.Mixed, required: true},
   level: {type: String, required: true},
   events: { type: mongoose.Schema.Types.ObjectId, ref: 'Events' },
-  kuliner: { type: mongoose.Schema.Types.ObjectId, ref: 'Kuliner' }
+  kuliner: { type: mongoose.Schema.Types.ObjectId, ref: 'Kuliner' },
+  pesanEvents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'pesanEvents' }]
 }, {collection: 'userprofile'});
 
 module.exports = mongoose.model('User', UserSchema);

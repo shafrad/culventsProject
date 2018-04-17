@@ -1,14 +1,17 @@
 var mongoose = require('mongoose');
 
 var pesanEventsSchema = new mongoose.Schema({
-  email: {type: mongoose.Schema.Types.Mixed, required: true},
+  email: {type: String, required: true},
   phone: {type: mongoose.Schema.Types.Mixed, required: true},
   name: {type: String, required: true},
+  tanggal: {type: String, required: true},
+  jam: {type: String, required: true},
+  tempat: {type: String, required: true},
+  event_id: {type: mongoose.Schema.Types.ObjectId, ref: 'Events', required:true},  
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
-  user: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  kuliner: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Kuliner' }],
-  events: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Events' }]
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  kuliner: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Kuliner' }]
 }, {collection: 'pesanEvents'});
 
 module.exports = mongoose.model('pesanEvents', pesanEventsSchema);

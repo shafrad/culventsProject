@@ -10,7 +10,8 @@ var KulinerSchema = new mongoose.Schema({
   image: String,
   upvotes: {type: Number, default: 0},
   user: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  events: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Events' }]
+  events: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Events' }],
+  pesanEvents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'pesanEvents' }]
 }, {collection: 'kuliner'});
 
 module.exports = mongoose.model('Kuliner', KulinerSchema);

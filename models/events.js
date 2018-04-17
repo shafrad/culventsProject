@@ -9,10 +9,12 @@ var EventsSchema = new mongoose.Schema({
   tempat: String,  
   guestStar: String,  
   image: String,
+  kuota: String,
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
   user: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  kuliner: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Kuliner' }]
+  kuliner: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Kuliner' }],
+  pesanEvents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'pesanEvents' }]
 }, {collection: 'events'});
 
 module.exports = mongoose.model('Events', EventsSchema);
