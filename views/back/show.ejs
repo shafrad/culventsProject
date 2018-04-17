@@ -18,7 +18,7 @@
 
   </head>
 
-  <body>
+  <body >
 
     <!-- Navigation -->
     <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -127,9 +127,9 @@
 
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Harum, dolor quis. Sunt, ut, explicabo, aliquam tenetur ratione tempore quidem voluptates cupiditate voluptas illo saepe quaerat numquam recusandae? Qui, necessitatibus, est!</p>
           <% if (register) { %>
-          <a href="/users/registration"><button type="button" class="btn btn-outline-success" disabled>Register</button></a>
+          <a id = "link"></a><button type="button" class="btn btn-outline-success" disabled>Register</button></a>
           <% } else { %>
-          <a href="/users/registration"><button type="button" class="btn btn-outline-success">Register</button></a>
+          <a id = "link1"><button type="button" class="btn btn-outline-success">Register</button></a>
           <% } %>
           <hr>
 
@@ -167,5 +167,17 @@
     <script type="text/javascript" src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   </body>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  let a = location.href.lastIndexOf('/');
+  let id = location.href.substring(a+1);
+$('#link').attr("href", "/users/registration/" + id);
+$('#link1').attr("href", "/users/registration/" + id);
+
+  console.log(id);
+});
+
+</script>
 
 </html>
