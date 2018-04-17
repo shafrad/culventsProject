@@ -32,6 +32,8 @@ var authentication = require('./controller/authentication');
 var loginController = require('./controller/loginController');
 const api = require(path.join(__dirname, 'routes/api'))
 const front = require(path.join(__dirname, 'routes/front'))
+var Events = require('./models/events');
+
 
 var app = express();
 app.use(session({
@@ -61,7 +63,19 @@ app.post('/admin/delete/:id', api.article.del);
 app.get('/users', front.data.list);
 app.get('/users/1', front.data.show);
 app.get('/users/show/:id', front.data.showById);
-app.get('/users/registration', front.data.registerByEmail);
+app.get('/users/registration/:id', front.data.registerByEmail);
+app.get('/update/:id', (req,res) => {
+  Events.findById(req.params.id, (err, data) => {
+    if(err) {
+      console.log(err)
+      next()
+    } else {
+      data.update({kuota: parseInt(data.kuota) -1 }, (err, data) => {
+        res.send(data)
+      });
+    }
+  })
+})
 // app.get('/show/:id/register', front.data.confirm);
 
 app.use('/', index);
@@ -82,6 +96,7 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
+
   res.status(err.status || 500);
   res.render('error');
 });
