@@ -10,7 +10,7 @@
           type : 'GET',
           url : '/register',
           success: function(data){
-            $("#regDiv").html(data);
+            // $("#regDiv").html(data);
           }
         });
     });
@@ -21,7 +21,7 @@
           type : 'GET',
           url : '/login',
           success: function(data){
-            $("#loginDiv").html(data);
+            // $("#loginDiv").html(data);
           }
         });
     });
@@ -35,7 +35,7 @@
           url : '/demo',
           data : loginData,
           success: function(data){
-          $("#mainDiv").html(data);
+          // $("#mainDiv").html(data);
           }
         });
     });
@@ -50,6 +50,7 @@
           data : regData,
           success: function(data){
           $("#mainDiv").html(data);
+          // window.location.href = '/regiterToDb';
           }
         });
     });
@@ -67,7 +68,7 @@
      url : '/completeprofile',
      data : profileData,
      success : function(data){
-        $("#mainDiv").html(data);
+        // $("#mainDiv").html(data);
      }
    });
  });
@@ -81,7 +82,7 @@
   <input class="w3-input w3-border" id="uname"  name="uname" type="text"></p>
   <p>
   <label class="w3-text-blue"><b>Password</b></label>
-  <input class="w3-input w3-border"  id="upass" name="pass" type="text"></p>
+  <input class="w3-input w3-border"  id="upass" name="upass" type="password"></p>
   <p>
   <button class="w3-btn w3-blue" id="regForm">Register</button></p>
 </body>
