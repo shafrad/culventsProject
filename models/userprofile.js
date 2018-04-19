@@ -8,6 +8,7 @@ var UserSchema = new mongoose.Schema({
   name: {type: String, required: true},
   pass: {type: mongoose.Schema.Types.Mixed, required: true},
   level: {type: String, required: true},
+  status: {type: String, required: true},
   events: { type: mongoose.Schema.Types.ObjectId, ref: 'Events' },
   kuliner: { type: mongoose.Schema.Types.ObjectId, ref: 'Kuliner' },
   pesanEvents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'pesanEvents' }]
