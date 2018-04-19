@@ -1,5 +1,10 @@
 var router = require('express').Router()
 var session = require('express-session');
+var mailgun = require("mailgun-js");
+var api_key = 'key-f400183259064f666c6a51d401bf46d5';
+var DOMAIN = 'sandbox33dead83ec3945729870f42a9fff343c.mailgun.org';
+var mailgun = require('mailgun-js')({apiKey: api_key, domain: DOMAIN});
+var sha256 = require('js-sha256');
 // module.exports = (function(app){
 // app.use(session({
 //     secret: '2C44-4D44-WppQ38S',
@@ -10,7 +15,7 @@ var session = require('express-session');
 // var url = 'mongodb://localhost:27017/myproject';
 var authentication = require('./authentication');
 var User = require('../models/userprofile');
-
+let login = false;
 // Authentication and Authorization Middleware
 // var authAdmin = function(req, res, next) {
   //   if (req.session && req.session.user === "admin" && req.session.admin)
@@ -30,24 +35,33 @@ router.get('/', function(req,res){
   });
 // Login TO DB==================================================================
   router.post('/demo', function(req,res){
+    req.body.pass = sha256(req.body.pass);
     console.log('aaaa', req.body);
   //  MongoClient.connect(url, function(err, database) {
   //  var db=database.db('myproject');
    User.findOne({ email: req.body.email}, function(err, userprofile) {
+              
              if(userprofile === null){
                res.end("Login invalid");
             }else if (userprofile.email && (userprofile.email === req.body.email) && userprofile.pass && (userprofile.pass === req.body.pass)){
               
               req.session.user = userprofile;
               console.log(req.session)
-              if(req.session.user.name !== "admin"){
+              if(req.session.user.name !== "admin" && userprofile.status === 'Belum Disetujui'){
                 // req.session.admin = false;
-                req.session.userprofile = userprofile;                         
+                // req.session.userprofile = userprofile;  
+                // console.log("login success!");
+                login = false;
+                res.redirect('/');     
+              } else if(req.session.user.name !== "admin" && userprofile.status === 'Disetujui') {
+                login = true;
                 console.log("login success!");
-              res.redirect('/content') 
+                res.redirect('/content'); 
+                         
               } else {
                 // req.session.admin = true;
-                req.session.userprofile = userprofile;                         
+                // req.session.userprofile = userprofile;                         
+                login = true;
                 console.log("login success!");
                 res.redirect('/admin');
                 
@@ -80,6 +94,58 @@ router.post('/regiterToDb',function(req,res){
      if (err) throw err;
      console.log("1 document inserted");
     //  db.close();
+    var data = {
+      from: 'Culvents <admin@events.com>',
+      to: `${res.email}`,
+      subject: 'Aktivasi emailmu!',
+      text: 'Testing some Mailgun awesomness!',
+      html: `<!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      
+          <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet">    
+      
+          <title>Document</title>
+          
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/2.3.2/jspdf.plugin.autotable.js"></script>
+          
+      </head>
+      <body>
+          
+          <div class="container">
+              <div class="row">
+                <div class="col-xs-12">
+            
+                  <div id="content">
+                    <h2 class="text-center">Selamat!</h2>
+                    <p>Klik link dibawah ini : <a href="http://localhost:3000/admin/usersmanagement/confirm/${res._id}">http://localhost:3000/admin/usersmanagement/confirm/...</a>
+                    
+                    </p>              
+          
+            
+                    <br>
+                    <!-- <footer class="footer">Demo from https://jsfiddle.net/Purushoth/bor1nggb</footer> -->
+            
+                  </div>
+            
+            
+                </div>
+              </div>
+            </div>
+            <br>    
+      
+      </body>
+                                  
+      </html>`
+    };
+    
+    mailgun.messages().send(data, function (error, body) {
+      console.log(body);
+    });
       });
        res.render('completeprofile',{profileData:req.body});
     // console.log(User)
@@ -104,3 +170,4 @@ router.post('/regiterToDb',function(req,res){
   });
 
   module.exports = router;
+  exports.login = login;
