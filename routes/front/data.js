@@ -13,10 +13,8 @@
 var loginController = require('../../controller/loginController');
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
-var mailgun = require("mailgun-js");
-var api_key = 'key-f400183259064f666c6a51d401bf46d5';
-var DOMAIN = 'sandbox33dead83ec3945729870f42a9fff343c.mailgun.org';
-var mailgun = require('mailgun-js')({apiKey: api_key, domain: DOMAIN});
+var mail = require('../../routes/config');
+var mailgun = require('mailgun-js')({apiKey: mail.api_key, domain: mail.DOMAIN});
 var Events = require('../../models/events');
 var pesanEvents = require('../../models/pesanEvents');
 var register = false;
