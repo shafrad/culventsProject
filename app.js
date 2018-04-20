@@ -12,6 +12,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var sha256 = require('js-sha256');
 var mongoose = require('mongoose');
 var mongoDB = 'mongodb://127.0.0.1/myproject';
 mongoose.connect(mongoDB);
@@ -51,7 +52,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', loginController);
+app.use('/', loginController.router);
 app.get('/admin', authentication.authAdmin, api.article.list);
 app.post('/admin/tambah', authentication.authAdmin, api.article.tambah);
 app.get('/admin/update/:id', authentication.authAdmin, api.article.update);
