@@ -1,10 +1,6 @@
 var router = require('express').Router()
-var session = require('express-session');
-var mailgun = require("mailgun-js");
-var api_key = 'key-f400183259064f666c6a51d401bf46d5';
-var DOMAIN = 'sandbox33dead83ec3945729870f42a9fff343c.mailgun.org';
-var mailgun = require('mailgun-js')({apiKey: api_key, domain: DOMAIN});
-var sha256 = require('js-sha256');
+var mail = require('../routes/config');
+var mailgun = require('mailgun-js')({apiKey: mail.api_key, domain: mail.DOMAIN});
 // module.exports = (function(app){
 // app.use(session({
 //     secret: '2C44-4D44-WppQ38S',
@@ -169,5 +165,7 @@ router.post('/regiterToDb',function(req,res){
       // res.send("You can only see this after you've logged in.");
   });
 
-  module.exports = router;
-  exports.login = login;
+  module.exports = { 
+    router,
+    login
+  };
