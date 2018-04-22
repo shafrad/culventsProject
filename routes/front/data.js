@@ -9,6 +9,8 @@
 //    , util = require('util')
 //    , upload = multer({limits: {fileSize: 2000000 },dest:'./public/images'});
 // var app = require('../../app');
+var mongoose = require('mongoose');
+var ObjectId = mongoose.Types.ObjectId;
 var mailgun = require("mailgun-js");
     var api_key = 'key-f400183259064f666c6a51d401bf46d5';
     var DOMAIN = 'sandbox33dead83ec3945729870f42a9fff343c.mailgun.org';
@@ -44,12 +46,12 @@ exports.show = (request, result, next) => {
 exports.showById = (request, result, next) => {
     if (!request.params.id) return next(new Error('No article ID.'))
     Events.findById(request.params.id,(error, event) => {
-        console.log(error, event);
+        
         if (error) return next(error)
         // result.send({articles: articlesOne})
         var register = false;
         globalEvent = event;
-        console.log('aaa', event)
+        // console.log('aaa', event)
         result.render("../views/back/show", {event: event, register: register});
     })
     }
@@ -65,33 +67,127 @@ exports.showById = (request, result, next) => {
                 console.log("No match data");
                 // cek sudah login atau belum
                 if (request.session.user.email){ //sudah login
-                newpesanEvents.save(request.session.user, function(err,registered) {
+                Events.findById(request.params.id, (err, eventdata) => {
+                    console.log(eventdata);
+                    if(err){
+                        return (err);
+                        next();
+                    }
+                    else if(parseInt(eventdata.kuota) > 0){
+                        eventdata.update({kuota: parseInt(eventdata.kuota)-1}, (err, data)=> {
+                            if(err){
+                                return next(err);
+                            } else {
+                                console.log('aaaaaaaaaaaaaaaaa' + Object.keys(request.session.user));
+                            }
+                        })
+                    }
+                    else {
+                        result.end("Event's has been fulfilled!");
+                        
+                    }
                 
+                newpesanEvents.email = request.session.user.email;
+                newpesanEvents.phone = request.session.user.phone;
+                newpesanEvents.name = eventdata.name;
+                newpesanEvents.tanggal = eventdata.tanggal;
+                newpesanEvents.jam = eventdata.jam;
+                newpesanEvents.tempat = eventdata.tempat;
+                newpesanEvents.event_id = new ObjectId(request.params.id);                   
+                                    
+                newpesanEvents.save(function(err,registered) {
+                    
                       if(err) {
                         console.log(err);
-                        result.render("../views/back/show");
+                        // result.render("../views/back/show");
                       } else {
                         console.log("Successfully created.");
+                        
                         // var newoid = new ObjectId(res.ops[0]._id);
                         // fs.remove(req.file.path, function(err) {
-                        if (err) { console.log(err) };
+                        // if (err) { console.log(err) };                            
                         // res.send(newItem);
                         // result.redirect('/../views/back/show', {registered: registered});
                         var register = true;
                         var data = {
-                            from: 'User <user@events.com>',
-                            to: 'shafrianadhi@gmail.com',
-                            subject: 'Hello',
-                            text: 'Testing some Mailgun awesomness!'
+                            from: 'Admin <admin@events.com>',
+                            to: `${registered.email}`,
+                            subject: 'Hello!',
+                            text: 'Testing some Mailgun awesomness!',
+                            html: `<!DOCTYPE html>
+                            <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                            
+                                <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet">    
+                            
+                                <title>Document</title>
+                                
+                                <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+                                <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/2.3.2/jspdf.plugin.autotable.js"></script>
+                                
+                            </head>
+                            <body>
+                                
+                                <div class="container">
+                                    <div class="row">
+                                      <div class="col-xs-12">
+                                  
+                                        <div id="content">
+                                          <h2 class="text-center">Selamat!</h2>
+                                          <p>Anda telah terdaftar di ${registered.name}. Berikut detail acaranya, sebagai berikut :
+                                          </p>
+                                          
+                                          <table id="demo" class="table table-bordered">
+                                            <thead>
+                                              <tr>
+                                                <th>No. Registrasi</th>
+                                                <th>Tanggal</th>
+                                                <th>Waktu</th>
+                                                <th>Tempat</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              <tr>
+                                                <td></td>
+                                                <td>${registered.tanggal}</td>
+                                                <td>${registered.jam}</td>
+                                                <td>${registered.tempat}</td>
+                                              </tr>
+                                              
+                                            </tbody>
+                                          </table>
+                                          <div>
+                                            <button class="btn" id="export">Save</button>
+                                          </div>
+                                  
+                                          <br>
+                                          <!-- <footer class="footer">Demo from https://jsfiddle.net/Purushoth/bor1nggb</footer> -->
+                                  
+                                        </div>
+                                  
+                                  
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <br>    
+                            
+                            </body>
+                                                        
+                            </html>`
                           };
                           
                           mailgun.messages().send(data, function (error, body) {
-                            console.log('hello');
+                            console.log(body);
                           });
                         result.render('../views/back/show', {event: globalEvent, register: register});
                         
                     }}
-                )}
+                )
+            })
+            }
                 else { //belum login
 
                 }

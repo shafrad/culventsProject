@@ -25,7 +25,7 @@ Events.find({}, (error, events) => {
 exports.listById = (request, result, next) => {
     if (!request.params.id) return next(new Error('No article ID.'))
     request.collections.articles.findById(request.params.id,(error, articlesOne) => {
-        console.log(error, articlesOne);
+        
         if (error) return next(error)
         // result.send({articles: articlesOne})
         result.render("../views/articles/show", {articles: articlesOne});
