@@ -1,5 +1,6 @@
 var router = require('express').Router()
 var mail = require('../routes/config');
+var sha256 = require('js-sha256');
 var mailgun = require('mailgun-js')({apiKey: mail.api_key, domain: mail.DOMAIN});
 // module.exports = (function(app){
 // app.use(session({
