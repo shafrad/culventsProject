@@ -59,10 +59,10 @@ exports.showById = (request, result, next) => {
     exports.registerByEmail = (request, result, next) => {
         var newpesanEvents = new pesanEvents();
         // if (!request.params.id) return next(new Error('No article ID.'))
-        pesanEvents.findOne({email: request.session.user.email}, (error, reg) => {
+        pesanEvents.findOne({email: request.session.user.email, event_id: request.params.id}, (error, reg) => {
             // console.log(request);
             //cek sudah terdaftar di event atau belum
-            if(!reg || request.params.id !== reg.event_id){// belum terdaftar
+            if(!reg){// belum terdaftar
                 
                 console.log("No match data");
                 // cek sudah login atau belum
@@ -190,7 +190,7 @@ exports.showById = (request, result, next) => {
             }
             else { //sudah terdaftar
                 var register = true;
-                // result.render('../views/back/show', {event: globalEvent, register: register})
+                result.render('../views/back/show', {event: globalEvent, register: register})
                 
             } 
             })  
