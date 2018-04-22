@@ -12,7 +12,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var sha256 = require('js-sha256');
 var mongoose = require('mongoose');
 var mongoDB = 'mongodb://127.0.0.1/myproject';
 mongoose.connect(mongoDB);
