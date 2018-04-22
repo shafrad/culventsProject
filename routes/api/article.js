@@ -10,13 +10,15 @@
 //    , upload = multer({limits: {fileSize: 2000000 },dest:'./public/images'});
 // var app = require('../../app');
 var Events = require('../../models/events');
+var User = require('../../models/userprofile');
+var loginController = require('../../controller/loginController');
 // GET articles API.
 exports.list = (request, result, next) => {
     //console.log("bbbbbbbbbbbbbbb");
 Events.find({}, (error, events) => {
     if (error) return next(error)
     // result.send({articles: articles})
-    result.render("../views/front/pages/events", {events: events});
+    result.render("../views/front/pages/events", {events: events, login: loginController.login});
     
     // result.render("../views/articles/index", {events: events});
 })
@@ -74,11 +76,10 @@ console.log(req.body);
             // var newoid = new ObjectId(res.ops[0]._id);
             // fs.remove(req.file.path, function(err) {
             if (err) { console.log(err) };
-            // res.send(newItem);
-            res.redirect('/admin');
+            res.send(events);
          
             
-            //  })
+            
         }
         });
     }
@@ -124,7 +125,8 @@ console.log(req.body);
 exports.update = function(req, res) {
     Events.findById(req.params.id, function (err, event) {
       if (err) return next(error)
-      res.render("../views/front/pages/eventsUpdate", {events: event});
+      res.send(event);
+      
     });
   };
 
@@ -133,14 +135,14 @@ exports.edit = (req, res, next) => {
 if (!req.params.id) return next(new Error('No article ID.'))
 // req.collections.articles.updateById(req.params.id, {$set: req.body.article}, (error, count) => {
 
-console.log('slamet sampe sini');
-Events.updateById(req.params.id, req.body, (err, event) => {  
+console.log(req.body);
+Events.updateOne({_id: req.params.id}, req.body, (err, event) => {  
     
     if (err) {
         console.log(err);
-        res.render("../views/front/pages/eventsUpdate", {events: event});
+        // res.render("../views/front/pages/events", {events: event});
       }
-      res.redirect("/admin");
+      res.send(event);
     // if (error) return next(error)
     // res.send({affectedCount: count})
 })
@@ -156,3 +158,53 @@ Events.findByIdAndRemove(req.params.id, (error) => {
     res.redirect('/admin');
 })
 }
+
+exports.usersManagement = (req, res, next) => {
+    User.find({}, (error, users) => {
+        if (error) return next(error)
+        // result.send({articles: articles})
+        res.render("../views/front/pages/usersmanagement", {users: users, login: loginController.login});
+        
+        // result.render("../views/articles/index", {events: events});
+    })
+}
+
+exports.updateUsersM = function(req, res) {
+    User.findById(req.params.id, function (err, user) {
+      if (err) return next(error)
+      res.send(user);
+      
+    });
+  };
+
+exports.editUsersM = (req, res, next) => {
+    if (!req.params.id) return next(new Error('No article ID.'))
+    // req.collections.articles.updateById(req.params.id, {$set: req.body.article}, (error, count) => {
+    
+    console.log(req.body);
+    User.updateOne({_id: req.params.id}, req.body, (err, user) => {  
+        
+        if (err) {
+            console.log(err);
+            // res.render("../views/front/pages/events", {events: event});
+          }
+          res.send(user);
+        // if (error) return next(error)
+        // res.send({affectedCount: count})
+    })
+    }
+
+exports.confirm = (req, res, next) => {
+    User.findById(req.params.id, (error, user) => {
+        if (error) return next(error)
+        // result.send({articles: articles})
+        user.update({status: 'Disetujui'}, (err, userupdate) => {
+            if (err) throw err;
+            console.log("Aktivasi berhasil!");
+            console.log('Silahkan login');
+            res.redirect('/');
+        })
+        
+        // result.render("../views/articles/index", {events: events});
+    })
+    }
