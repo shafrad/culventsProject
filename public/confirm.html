@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet">    
+
+    <title>Document</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/2.3.2/jspdf.plugin.autotable.js"></script>
+    
+</head>
+<body>
+    
+    <div class="container">
+        <div class="row">
+          <div class="col-xs-12">
+      
+            <div id="content">
+              <h2 class="text-center">Export from HTML</h2>
+              <p>This is a demo for exporting PDF from html using jsPDF. Click save <code>button</code> to export this content.
+              </p>
+              <br>
+              <p>Also checkout <a href="https://github.com/simonbengtsson/jsPDF-AutoTable">jsPDF-Autotable</a> for generating PDF tables with more customizable options.</p>
+              <table id="demo" class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Serial Number</th>
+                    <th>Name</th>
+                    <th>Percentile</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>James</td>
+                    <td>8.9</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>Harry</td>
+                    <td>7.6</td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>Emma</td>
+                    <td>7.0</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div>
+                <button class="btn" id="export">Save</button>
+              </div>
+      
+              <br>
+              <footer class="footer">Demo from https://jsfiddle.net/Purushoth/bor1nggb</footer>
+      
+            </div>
+      
+      
+          </div>
+        </div>
+      </div>
+      <br>    
+
+</body>
+
+<script type="text/javascript">
+    
+    document.getElementById("export").addEventListener('click',
+    exportPDF);
+
+    var specialElementHandlers = {
+    // element with id of "bypass" - jQuery style selector
+    '.no-export': function(element, renderer) {
+    // true = "handled elsewhere, bypass text extraction"
+    return true;
+        }
+    };
+
+    function exportPDF() {
+
+    var doc = new jsPDF('p', 'pt', 'a4');
+    //A4 - 595x842 pts
+    //https://www.gnu.org/software/gv/manual/html_node/Paper-Keywords-and-paper-size-in-points.html
+
+
+    //Html source 
+    var source = document.getElementById('content').innerHTML;
+
+    var margins = {
+    top: 10,
+    bottom: 10,
+    left: 10,
+    width: 595
+    };
+
+    doc.fromHTML(
+    source, // HTML string or DOM elem ref.
+    margins.left,
+    margins.top, {
+      'width': margins.width,
+      'elementHandlers': specialElementHandlers
+    },
+
+    function(dispose) {
+      // dispose: object with X, Y of the last line add to the PDF 
+      //          this allow the insertion of new lines after html
+          doc.save('Test.pdf');
+        }, margins);
+    }
+
+    </script>
+</html>
