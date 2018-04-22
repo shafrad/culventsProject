@@ -31,23 +31,50 @@
     <![endif]-->
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script type="text/javascript">
+    let Idd;
     $(document).ready(function(){
-        $("#submitBtn").click(function(){
-            var email  = $("#email").val();
-            var phone = $("#phone").val();
-            var name = $("#name").val();
-            var jam = $("#jam").val();
-            var tanggal = $("#tanggal").val();
-            var tempat = $("#tempat").val();
-            var guestStar = $("#guestStar").val();            
-            var kuota = $("#kuota").val();            
-            var Data ={'email': email, 'phone': phone, 'name': name,'jam': jam, 'tanggal': tanggal, 'tempat': tempat, 'guestStar': guestStar, 'kuota': kuota};
+        console.log('test');
+        $('.editBtns').on('click', function(e){
+            let id = $(e.currentTarget).parent().parent().attr("id")
+            Idd = $(e.currentTarget);
             $.ajax({
-              type : 'POST',
-              url : '/admin/tambah',
+              type : 'GET',
+              url : '/admin/usersmanagement/update/' + id,
+              success: function(data){
+                  // insert data values to modal
+                  
+                  $('#myModals')
+                  .find('#email1').val(data.email).end()
+                  .find('#phone1').val(data.phone).end()
+                  .find('#education1').val(data.education).end()
+                  .find('#aoi1').val(data.aoi).end()
+                  .find('#name1').val(data.name).end()
+                  .find('#level1').val(data.level).end()
+                  .find('#status1').val(data.status).end();
+
+                // $("#loginDiv").html(data);
+              }
+            });
+        });
+        $("#editBtnModals").click(function(){
+            var id = Idd.parent().parent().attr("id");
+            var email  = $("#email1").val();
+            var phone = $("#phone1").val();
+            var education = $("#education1").val();
+            var aoi = $("#aoi1").val();
+            var name = $("#name1").val();
+            var level = $("#level1").val();
+            var status = $("#status1").val();
+                      
+            var Data ={'email': email, 'phone': phone, 'education': education, 'aoi': aoi, 'name': name,'level': level, 'status': status};
+            $.ajax({
+              type : 'put',
+              url : '/admin/usersmanagement/edit/' + id,
               data : Data,
               success: function(data){
                 // $("#regDiv").html(data);
+                alert('success');
+                window.location.href = '/admin';
               }
             });
         });
@@ -330,7 +357,11 @@
                         <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <% if (login) { %>                        
+                        <li><a href="/"><i class="fa fa-sign-out fa-fw"></i> Login</a>
+                            <% } else { %>                                                    
+                        <li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                            <% } %>                            
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -435,10 +466,10 @@
                             <a href="#"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a class="active" href="blank.ejs">Blank Page</a>
+                                    <a href="/admin">Events</a>
                                 </li>
                                 <li>
-                                    <a href="login.ejs">Login Page</a>
+                                    <a class="active" href="/admin/usersmanagement">User Managements</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
@@ -468,45 +499,40 @@
                                 </div>
                                 <!-- /.panel-heading -->
                                 <div class="panel-body">
-                                        <% if(events.length>0) { %>
+                                        <% if(users.length>0) { %>
                                     <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
                                         <thead>
                                             <tr>
                                                 <th>Email</th>
                                                 <th>Phone</th>
-                                                <th>Name</th>
-                                                <th>Jam</th>
-                                                <th>Tanggal</th>
-                                                <th>Tempat</th>
-                                                <th>Guest Star</th>
-                                                <th>Kuota Events</th>
-                                                <th>Created</th>
-                                                <th>Updated</th>
-                                                <th>Action</th>                                                                                                                                                
+                                                <th>Education</th>
+                                                <th>Area of Interests</th>
+                                                <th>Nama</th>
+                                                <th>Level</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                                                                                                                                                                            
                                             </tr>
                                         </thead>
                                         <tbody>
-                                                <% for(var i=0; i<events.length;i++) { %>
-                                                <tr class="odd gradeX">
-                                                        <td><%=events[i].email%></td>
-                                                        <td><%=events[i].phone%></td>
-                                                        <td><%=events[i].name%></td>
-                                                        <td><%=events[i].jam%></td>
-                                                        <td><%=events[i].tanggal%></td>
-                                                        <td><%=events[i].tempat%></td>                                                        
-                                                        <td><%=events[i].guestStar%></td>
-                                                        <td><%=events[i].kuota%></td>
-                                                        <td><%=events[i].created%></td>
-                                                        <td><%=events[i].updated%></td>                                        
+                                                <% for(var i=0; i<users.length;i++) { %>
+                                                <tr class="odd gradeX" id = "<%= users[i]._id %>">
+                                                        <td><%= users[i].email %></td>
+                                                        <td><%= users[i].phone %></td>
+                                                        <td><%= users[i].education %></td>
+                                                        <td><%= users[i].aoi %></td>
+                                                        <td><%= users[i].name %></td>
+                                                        <td><%= users[i].level %></td>                                                        
+                                                        <td><%= users[i].status %></td>                                                                                           
                                                         
-                                                        <td class="center"><button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal" >
-
-                                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
-                                                        <a class="btn btn-default" href="/admin/update/<%= events[i]._id%>">
-                                                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+                                                        <td class="center">                                                       
+                                                        <a href=""><button type="button" class="btn btn-success" >
+                                                        Setujui</button></a>
                                                         
-                                                        <form action="/admin/delete/<%= events[i]._id %>" method="post" >
-                                                        <button type="submit" class="glyphicon glyphicon-trash" aria-hidden="true" onclick="return confirm('Are you sure you want to delete this item?');"></button></form></td>
+                                                        <button type="button" class="btn btn-default editBtns" data-toggle="modal" data-target="#myModals" >
+                                                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></button>
+                                                        
+                                                        </td>
                                                     </tr>
                                                     <% } %>
                                                 </tbody>
@@ -526,223 +552,114 @@
     <!-- /#wrapper -->
 
     <!-- The Modal -->
-<div class="modal fade" id="myModal">
-        <div class="modal-dialog">
-          <div class="modal-content">
-      
-            <!-- Modal Header -->
-            <div class="modal-header">
-              <h4 class="modal-title">Create Events</h4>
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-      
-            <!-- Modal body -->
-            <div class="modal-body">
-                    <div class="form-group row">
-                            <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
-                            <div class="col-sm-10">
-                              <input type="email" class="form-control" id="email" name="email" placeholder="Email">
-                            </div>
-                          </div>
-                          <div class="form-group row">
-                            <label for="inputPassword3" class="col-sm-2 col-form-label">Phone</label>
-                            <div class="col-sm-10">
-                              <input class="form-control" id="phone" name="phone" placeholder="Phone">
-                            </div>
-                          </div>
-                          <div class="form-group row">
-                                <label for="inputPassword3" class="col-sm-2 col-form-label">Nama</label>
-                                <div class="col-sm-10">
-                                  <input class="form-control" id="name" name="name" placeholder="Nama">
-                                </div>
-                              </div>
-                              <div class="form-group row">
-                                    <label for="inputPassword3" class="col-sm-2 col-form-label">Jam</label>
-                                    <div class="col-sm-10">
-                                      <input class="form-control" id="jam" name="jam" placeholder="Jam">
-                                    </div>
-                                  </div>
-                                  <div class="form-group row">
-                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Tanggal</label>
-                                        <div class="col-sm-10">
-                                          <input class="form-control" id="tanggal" name="tanggal" placeholder="Tanggal">
-                                        </div>
-                                      </div>
-                                      <div class="form-group row">
-                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Tempat</label>
-                                            <div class="col-sm-10">
-                                              <input class="form-control" id="tempat" name="tempat" placeholder="Tempat">
-                                            </div>
-                                          </div>
-                                          <div class="form-group row">
-                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Guest Star</label>
-                                            <div class="col-sm-10">
-                                              <input class="form-control" id="guestStar" name="guestStar" placeholder="Guest Star">
-                                            </div>
-                                          </div>
-                          <!-- <fieldset class="form-group">
-                            <div class="row">
-                              <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
-                              <div class="col-sm-10">
-                                <div class="form-check">
-                                  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
-                                  <label class="form-check-label" for="gridRadios1">
-                                    First radio
-                                  </label>
-                                </div>
-                                <div class="form-check">
-                                  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
-                                  <label class="form-check-label" for="gridRadios2">
-                                    Second radio
-                                  </label>
-                                </div>
-                                <div class="form-check disabled">
-                                  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="option3" disabled>
-                                  <label class="form-check-label" for="gridRadios3">
-                                    Third disabled radio
-                                  </label>
-                                </div>
-                              </div>
-                            </div>
-                          </fieldset> -->
-                          <!-- <div class="form-group row">
-                            <div class="col-sm-2">Checkbox</div>
-                            <div class="col-sm-10">
-                              <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="gridCheck1">
-                                <label class="form-check-label" for="gridCheck1">
-                                  Example checkbox
-                                </label>
-                              </div>
-                            </div>
-                          </div> -->
-                          <div class="form-group row">
-                            <div class="col-sm-10">
-                              <button type="submit" id="submitBtn" class="btn btn-primary" data-dismiss="modal">Submit</button>
-                            </div>
-                          </div>
-            </div>
-      
-            <!-- Modal footer -->
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
-      
-          </div>
-        </div>
-      </div>
 
       <div class="modal fade" id="myModals">
-        <div class="modal-dialog">
-          <div class="modal-content">
-      
-            <!-- Modal Header -->
-            <div class="modal-header">
-              <h4 class="modal-title">Update Events</h4>
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-      
-            <!-- Modal body -->
-            <div class="modal-body">
-                    <div class="form-group row">
-                            <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
-                            <div class="col-sm-10">
-                              <input type="email" class="form-control" id="email" name="email" value="<%= events.email %>">
-                            </div>
-                          </div>
-                          <div class="form-group row">
-                            <label for="inputPassword3" class="col-sm-2 col-form-label">Phone</label>
-                            <div class="col-sm-10">
-                              <input class="form-control" id="phone" name="phone" value="<%= events.phone %>">
-                            </div>
-                          </div>
-                          <div class="form-group row">
-                                <label for="inputPassword3" class="col-sm-2 col-form-label">Nama</label>
+            <div class="modal-dialog">
+              <div class="modal-content">
+          
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <h4 class="modal-title">Update User</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+          
+                <!-- Modal body -->
+                <div class="modal-body">
+                        <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
                                 <div class="col-sm-10">
-                                  <input class="form-control" id="name" name="name" placeholder="Nama">
+                                  <input type="email" class="form-control" id="email1" name="email1" placeholder="Email">
                                 </div>
                               </div>
                               <div class="form-group row">
-                                    <label for="inputPassword3" class="col-sm-2 col-form-label">Jam</label>
+                                <label for="inputPassword3" class="col-sm-2 col-form-label">Phone</label>
+                                <div class="col-sm-10">
+                                  <input class="form-control" id="phone1" name="phone1" placeholder="Phone">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                    <label for="inputPassword3" class="col-sm-2 col-form-label">Education</label>
                                     <div class="col-sm-10">
-                                      <input class="form-control" id="jam" name="jam" placeholder="Jam">
+                                      <input class="form-control" id="education1" name="education1" placeholder="Education">
                                     </div>
                                   </div>
                                   <div class="form-group row">
-                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Tanggal</label>
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Area of Interests</label>
                                         <div class="col-sm-10">
-                                          <input class="form-control" id="tanggal" name="tanggal" placeholder="Tanggal">
+                                          <input class="form-control" id="aoi1" name="aoi1" placeholder="Area of Interests">
                                         </div>
                                       </div>
                                       <div class="form-group row">
-                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Tempat</label>
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Nama</label>
                                             <div class="col-sm-10">
-                                              <input class="form-control" id="tempat" name="tempat" placeholder="Tempat">
+                                              <input class="form-control" id="name1" name="name1" placeholder="Nama">
                                             </div>
                                           </div>
                                           <div class="form-group row">
-                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Guest Star</label>
-                                            <div class="col-sm-10">
-                                              <input class="form-control" id="guestStar" name="guestStar" placeholder="Guest Star">
-                                            </div>
-                                          </div>
-                                          <div class="form-group row">
-                                                <label for="inputPassword3" class="col-sm-2 col-form-label">Kuota</label>
+                                                <label for="inputPassword3" class="col-sm-2 col-form-label">Level</label>
                                                 <div class="col-sm-10">
-                                                  <input class="form-control" id="kuota" name="kuota" placeholder="Kuota Events">
+                                                  <input class="form-control" id="level1" name="level1" placeholder="Level">
                                                 </div>
                                               </div>
-                          <!-- <fieldset class="form-group">
-                            <div class="row">
-                              <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
-                              <div class="col-sm-10">
-                                <div class="form-check">
-                                  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
-                                  <label class="form-check-label" for="gridRadios1">
-                                    First radio
-                                  </label>
+                                              <div class="form-group row">
+                                                <label for="inputPassword3" class="col-sm-2 col-form-label">Status</label>
+                                                <div class="col-sm-10">
+                                                  <input class="form-control" id="status1" name="status1" placeholder="Status">
+                                                </div>
+                                              </div>
+                              <!-- <fieldset class="form-group">
+                                <div class="row">
+                                  <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
+                                  <div class="col-sm-10">
+                                    <div class="form-check">
+                                      <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
+                                      <label class="form-check-label" for="gridRadios1">
+                                        First radio
+                                      </label>
+                                    </div>
+                                    <div class="form-check">
+                                      <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+                                      <label class="form-check-label" for="gridRadios2">
+                                        Second radio
+                                      </label>
+                                    </div>
+                                    <div class="form-check disabled">
+                                      <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="option3" disabled>
+                                      <label class="form-check-label" for="gridRadios3">
+                                        Third disabled radio
+                                      </label>
+                                    </div>
+                                  </div>
                                 </div>
-                                <div class="form-check">
-                                  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
-                                  <label class="form-check-label" for="gridRadios2">
-                                    Second radio
-                                  </label>
+                              </fieldset> -->
+                              <!-- <div class="form-group row">
+                                <div class="col-sm-2">Checkbox</div>
+                                <div class="col-sm-10">
+                                  <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="gridCheck1">
+                                    <label class="form-check-label" for="gridCheck1">
+                                      Example checkbox
+                                    </label>
+                                  </div>
                                 </div>
-                                <div class="form-check disabled">
-                                  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="option3" disabled>
-                                  <label class="form-check-label" for="gridRadios3">
-                                    Third disabled radio
-                                  </label>
+                              </div> -->
+                              <div class="form-group row">
+                                <div class="col-sm-10">
+                                  <button type="submit" id="editBtnModals" class="btn btn-primary" data-dismiss="modal">Submit</button>
                                 </div>
                               </div>
-                            </div>
-                          </fieldset> -->
-                          <!-- <div class="form-group row">
-                            <div class="col-sm-2">Checkbox</div>
-                            <div class="col-sm-10">
-                              <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="gridCheck1">
-                                <label class="form-check-label" for="gridCheck1">
-                                  Example checkbox
-                                </label>
-                              </div>
-                            </div>
-                          </div> -->
-                          <div class="form-group row">
-                            <div class="col-sm-10">
-                              <button type="submit" id="editBtn" class="btn btn-primary">Submit</button>
-                            </div>
-                          </div>
+                </div>
+          
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+          
+              </div>
             </div>
-      
-            <!-- Modal footer -->
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
-      
           </div>
-        </div>
-      </div>
+
+      
 
     <!-- jQuery -->
     <script type="text/javascript" src="/vendor/jquery/jquery.min.js"></script>
