@@ -1,7 +1,7 @@
 var session = require('express-session');
 
 authAdmin = function(req, res, next) {
-    if (req.session && req.session.user === "admin"){
+    if (req.session && req.session.user.name === "admin"){
       return next();
     }
     else {
