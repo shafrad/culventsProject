@@ -10,7 +10,7 @@
           type : 'GET',
           url : '/register',
           success: function(data){
-            $("#regDiv").html(data);
+            // $("#regDiv").html(data);
           }
         });
     });
@@ -19,22 +19,7 @@
           type : 'GET',
           url : '/login',
           success: function(data){
-            $("#loginDiv").html(data);
-          }
-        });
-    });
-    //=====Login Form Request=============================================
-    $("#loginForm").click(function(){
-      var uemail = $("#email").val();
-      var upass = sha256($("#upass").val());
-      var loginData ={'email': uemail,'pass':upass};
-      console.log(loginData)
-      $.ajax({
-          type : 'POST',
-          url : '/demo',
-          data : loginData,
-          success: function(data){
-          $("#mainDiv").html(data);
+            // $("#loginDiv").html(data);
           }
         });
     });
@@ -48,7 +33,7 @@
           url : '/regiterToDb',
           data : regData,
           success: function(data){
-          $("#mainDiv").html(data);
+          // $("#mainDiv").html(data);
           }
         });
     });
@@ -66,7 +51,7 @@
      url : '/completeprofile',
      data : profileData,
      success : function(data){
-        $("#mainDiv").html(data);
+        // $("#mainDiv").html(data);
      }
    });
  });
@@ -75,13 +60,15 @@
 </head>
 <body>
     <h2 class="w3-text-blue">Login Form</h2>
-  <p>
+  <form action="/demo" method="post">
+    <p>
     <label class="w3-text-blue"><b>Email</b></label>
     <input class="w3-input w3-border" name="email" type="text" id ="email"></p>
     <p>
     <label class="w3-text-blue" id = "pass"><b>Password</b></label>
-    <input class="w3-input w3-border" name="pass" type="text" id ="upass"></p>
+    <input class="w3-input w3-border" name="pass" type="password" id ="upass"></p>
     <p>
     <button class="w3-btn w3-blue" id="loginForm">Login</button></p>
+  </form>
 </body>
 </html>

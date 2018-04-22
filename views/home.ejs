@@ -11,6 +11,7 @@
           url : '/register',
           success: function(data){
             $("#regDiv").html(data);
+            // window.location.href = '/register';
           }
         });
     });
@@ -19,7 +20,8 @@
           type : 'GET',
           url : '/login',
           success: function(data){
-            $("#loginDiv").html(data);
+            // $("#loginDiv").html(data);
+            window.location.href = '/login';
           }
         });
     });
@@ -33,7 +35,7 @@
           url : '/demo',
           data : loginData,
           success: function(data){
-          $("#mainDiv").html(data);
+          // $("#mainDiv").html(data);
           }
         });
     });
@@ -47,7 +49,7 @@
           url : '/regiterToDb',
           data : regData,
           success: function(data){
-          $("#mainDiv").html(data);
+          // $("#mainDiv").html(data);
           }
         });
     });
@@ -65,7 +67,7 @@
      url : '/completeprofile',
      data : profileData,
      success : function(data){
-        $("#mainDiv").html(data);
+        // $("#mainDiv").html(data);
      }
    });
  });
