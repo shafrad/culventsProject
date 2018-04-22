@@ -9,7 +9,14 @@
 //    , util = require('util')
 //    , upload = multer({limits: {fileSize: 2000000 },dest:'./public/images'});
 // var app = require('../../app');
+var mailgun = require("mailgun-js");
+    var api_key = 'key-f400183259064f666c6a51d401bf46d5';
+    var DOMAIN = 'sandbox33dead83ec3945729870f42a9fff343c.mailgun.org';
+    var mailgun = require('mailgun-js')({apiKey: api_key, domain: DOMAIN});
 var Events = require('../../models/events');
+var pesanEvents = require('../../models/pesanEvents');
+var register = false;
+var globalEvent = {};
 // GET articles API.
 exports.list = (request, result, next) => {
     console.log(request.body)
@@ -17,7 +24,8 @@ exports.list = (request, result, next) => {
 Events.find({}, (error, events) => {
     if (error) return next(error)
     // result.send({articles: articles})
-    result.render("../views/back/indexLogin", {events: events});
+    var register = false;
+    result.render("../views/back/indexLogin", {events: events, register:register});
     
     // result.render("../views/articles/index", {events: events});
 })
@@ -39,9 +47,62 @@ exports.showById = (request, result, next) => {
         console.log(error, event);
         if (error) return next(error)
         // result.send({articles: articlesOne})
-        result.render("../views/back/show", {events: event});
+        var register = false;
+        globalEvent = event;
+        console.log('aaa', event)
+        result.render("../views/back/show", {event: event, register: register});
     })
     }
+    
+    exports.registerByEmail = (request, result, next) => {
+        var newpesanEvents = new pesanEvents(request.session.user);
+        // if (!request.params.id) return next(new Error('No article ID.'))
+        pesanEvents.findOne({email: request.session.user.email}, (error, reg) => {
+            // console.log(error, event);
+            //cek sudah terdaftar di event atau belum
+            if(!reg){// belum terdaftar
+                
+                console.log("No match data");
+                // cek sudah login atau belum
+                if (request.session.user.email){ //sudah login
+                newpesanEvents.save(request.session.user, function(err,registered) {
+                
+                      if(err) {
+                        console.log(err);
+                        result.render("../views/back/show");
+                      } else {
+                        console.log("Successfully created.");
+                        // var newoid = new ObjectId(res.ops[0]._id);
+                        // fs.remove(req.file.path, function(err) {
+                        if (err) { console.log(err) };
+                        // res.send(newItem);
+                        // result.redirect('/../views/back/show', {registered: registered});
+                        var register = true;
+                        var data = {
+                            from: 'User <user@events.com>',
+                            to: 'shafrianadhi@gmail.com',
+                            subject: 'Hello',
+                            text: 'Testing some Mailgun awesomness!'
+                          };
+                          
+                          mailgun.messages().send(data, function (error, body) {
+                            console.log('hello');
+                          });
+                        result.render('../views/back/show', {event: globalEvent, register: register});
+                        
+                    }}
+                )}
+                else { //belum login
+
+                }
+            }
+            else { //sudah terdaftar
+                var register = true;
+                result.render('../views/back/show', {event: globalEvent, register: register})
+                
+            } 
+            })  
+        };
 
 exports.create = function(req, res) {
     res.render("../views/front/pages/events", {events: events});

@@ -33,14 +33,14 @@ router.get('/', function(req,res){
     console.log('aaaa', req.body);
   //  MongoClient.connect(url, function(err, database) {
   //  var db=database.db('myproject');
-   User.findOne({ name: req.body.name}, function(err, userprofile) {
+   User.findOne({ email: req.body.email}, function(err, userprofile) {
              if(userprofile === null){
                res.end("Login invalid");
-            }else if (userprofile.name && userprofile.name === req.body.name && userprofile.pass && userprofile.pass === req.body.pass){
+            }else if (userprofile.email && (userprofile.email === req.body.email) && userprofile.pass && (userprofile.pass === req.body.pass)){
               
-              req.session.user = req.body.name;
+              req.session.user = userprofile;
               console.log(req.session)
-              if(req.session.user !== "admin"){
+              if(req.session.user.name !== "admin"){
                 // req.session.admin = false;
                 req.session.userprofile = userprofile;                         
                 console.log("login success!");
@@ -99,7 +99,7 @@ router.post('/regiterToDb',function(req,res){
     router.get('/content', authentication.authUsers, function (req, res) {
       // res.render("../views/front/pages/events", {events: events});
             
-      res.render('completeprofile',{profileData:req.session.userprofile});
+      res.redirect('/users');
       // res.send("You can only see this after you've logged in.");
   });
 
