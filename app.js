@@ -25,15 +25,12 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 var MongoClient = require('mongodb').MongoClient;
 var url = 'mongodb://localhost:27017/myproject';
 
-
 var index = require('./routes/index');
 var users = require('./routes/users');
 var authentication = require('./controller/authentication');
 var loginController = require('./controller/loginController');
 const api = require(path.join(__dirname, 'routes/api'))
 const front = require(path.join(__dirname, 'routes/front'))
-var Events = require('./models/events');
-
 
 var app = express();
 app.use(session({
@@ -55,11 +52,15 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', loginController);
-app.get('/admin', api.article.list);
-app.post('/admin/tambah', api.article.tambah);
-app.get('/admin/update/:id', api.article.update);
-app.post('/admin/edit/:id', api.article.edit);
-app.post('/admin/delete/:id', api.article.del);
+app.get('/admin', authentication.authAdmin, api.article.list);
+app.post('/admin/tambah', authentication.authAdmin, api.article.tambah);
+app.get('/admin/update/:id', authentication.authAdmin, api.article.update);
+app.put('/admin/edit/:id', authentication.authAdmin, api.article.edit);
+app.post('/admin/delete/:id', authentication.authAdmin, api.article.del);
+app.get('/admin/usersmanagement', authentication.authAdmin, api.article.usersManagement);
+app.get('/admin/usersmanagement/update/:id', authentication.authAdmin, api.article.updateUsersM);
+app.put('/admin/usersmanagement/edit/:id', authentication.authAdmin, api.article.editUsersM);
+app.get('/admin/usersmanagement/confirm/:id', api.article.confirm);
 app.get('/users', front.data.list);
 app.get('/users/1', front.data.show);
 app.get('/users/show/:id', front.data.showById);
