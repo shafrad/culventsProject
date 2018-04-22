@@ -9,12 +9,14 @@
 //    , util = require('util')
 //    , upload = multer({limits: {fileSize: 2000000 },dest:'./public/images'});
 // var app = require('../../app');
+//and import somewhere..
+var loginController = require('../../controller/loginController');
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
 var mailgun = require("mailgun-js");
-    var api_key = 'key-f400183259064f666c6a51d401bf46d5';
-    var DOMAIN = 'sandbox33dead83ec3945729870f42a9fff343c.mailgun.org';
-    var mailgun = require('mailgun-js')({apiKey: api_key, domain: DOMAIN});
+var api_key = 'key-f400183259064f666c6a51d401bf46d5';
+var DOMAIN = 'sandbox33dead83ec3945729870f42a9fff343c.mailgun.org';
+var mailgun = require('mailgun-js')({apiKey: api_key, domain: DOMAIN});
 var Events = require('../../models/events');
 var pesanEvents = require('../../models/pesanEvents');
 var register = false;
@@ -27,7 +29,7 @@ Events.find({}, (error, events) => {
     if (error) return next(error)
     // result.send({articles: articles})
     var register = false;
-    result.render("../views/back/indexLogin", {events: events, register:register});
+    result.render("../views/back/indexLogin", {events: events, register:register, login: loginController.login});
     
     // result.render("../views/articles/index", {events: events});
 })
@@ -39,7 +41,7 @@ exports.show = (request, result, next) => {
         if (error) return next(error)
         // result.send({articles: articles})
         // result.send({articles: articlesOne})
-        result.render("../views/back/indexLogin", {events: events});
+        result.render("../views/back/indexLogin", {events: events, login: loginController.login});
     })
     }
 
@@ -52,23 +54,23 @@ exports.showById = (request, result, next) => {
         var register = false;
         globalEvent = event;
         // console.log('aaa', event)
-        result.render("../views/back/show", {event: event, register: register});
+        result.render("../views/back/show", {event: event, register: register, login: loginController.login});
     })
     }
     
     exports.registerByEmail = (request, result, next) => {
-        var newpesanEvents = new pesanEvents(request.session.user);
+        var newpesanEvents = new pesanEvents();
         // if (!request.params.id) return next(new Error('No article ID.'))
         pesanEvents.findOne({email: request.session.user.email}, (error, reg) => {
-            // console.log(error, event);
+            // console.log(request);
             //cek sudah terdaftar di event atau belum
-            if(!reg){// belum terdaftar
+            if(!reg || request.params.id !== reg.event_id){// belum terdaftar
                 
                 console.log("No match data");
                 // cek sudah login atau belum
                 if (request.session.user.email){ //sudah login
                 Events.findById(request.params.id, (err, eventdata) => {
-                    console.log(eventdata);
+                    // console.log(eventdata);
                     if(err){
                         return (err);
                         next();
@@ -98,7 +100,6 @@ exports.showById = (request, result, next) => {
                 newpesanEvents.save(function(err,registered) {
                     
                       if(err) {
-                        console.log(err);
                         // result.render("../views/back/show");
                       } else {
                         console.log("Successfully created.");
@@ -158,10 +159,7 @@ exports.showById = (request, result, next) => {
                                               </tr>
                                               
                                             </tbody>
-                                          </table>
-                                          <div>
-                                            <button class="btn" id="export">Save</button>
-                                          </div>
+                                          </table>                                          
                                   
                                           <br>
                                           <!-- <footer class="footer">Demo from https://jsfiddle.net/Purushoth/bor1nggb</footer> -->
@@ -189,12 +187,12 @@ exports.showById = (request, result, next) => {
             })
             }
                 else { //belum login
-
+                    result.redirect('/');
                 }
             }
             else { //sudah terdaftar
                 var register = true;
-                result.render('../views/back/show', {event: globalEvent, register: register})
+                // result.render('../views/back/show', {event: globalEvent, register: register})
                 
             } 
             })  
