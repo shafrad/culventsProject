@@ -10,6 +10,7 @@ var EventsSchema = new mongoose.Schema({
   guestStar: String,  
   image: String,
   kuota: String,
+  kode: String,
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
   user: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],

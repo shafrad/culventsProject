@@ -37,3 +37,4 @@ ehthumbs.db
 Thumbs.db
 routes/config.js
 node_modules/
+session.js
