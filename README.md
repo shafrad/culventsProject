@@ -6,9 +6,16 @@ This application used to manage any events, so the users can simply the reservat
 ## Features
 * Login, Logout, Register
 * Admin and Users Role
-* Users can access to the events list, show the events, register events
+* Users can access to the events list, show details the events, register events
 * Admin can take the users management and the CRUD of events list
+* Visitors can view the list of events and show details the events
 * User's email activation included into the users management
+* Send email to users and create the number of registration that used for the identity of the users to the events that they register to
+
+## Use Case Diagram
+<p align="center">
+  <img src="https://drive.google.com/file/d/1ZDhOtf213wDG6VB8qPtEeH8ZRpihL4so/view?usp=sharing" width="350"/> 
+</p>
 
 ## Development Tools
 * NodeJS
