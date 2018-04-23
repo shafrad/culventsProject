@@ -79,11 +79,13 @@ exports.showById = (request, result, next) => {
                                 return next(err);
                             } else {
                                 console.log('aaaaaaaaaaaaaaaaa' + Object.keys(request.session.user));
+                                console.log('sukses!');
                             }
                         })
                     }
                     else {
                         result.end("Event's has been fulfilled!");
+                        result.render('../views/back/show', {event: globalEvent, register: register});
                         
                     }
                 
@@ -94,10 +96,23 @@ exports.showById = (request, result, next) => {
                 newpesanEvents.jam = eventdata.jam;
                 newpesanEvents.tempat = eventdata.tempat;
                 newpesanEvents.event_id = new ObjectId(request.params.id);                   
+                newpesanEvents.kode = eventdata.kode;
+                let kode = eventdata.kode;
+
+                function makenoregist(kode) {
+                    var text = kode;
+                    var possible = "0123456789";
+                  
+                    for (var i = 0; i < 5; i++)
+                      text += possible.charAt(Math.floor(Math.random() * possible.length));
+                  
+                    return text;
+                  }                                     
                                     
                 newpesanEvents.save(function(err,registered) {
                     
                       if(err) {
+                          next(err);
                         // result.render("../views/back/show");
                       } else {
                         console.log("Successfully created.");
@@ -150,7 +165,7 @@ exports.showById = (request, result, next) => {
                                             </thead>
                                             <tbody>
                                               <tr>
-                                                <td></td>
+                                                <td>${makenoregist(kode)}</td>
                                                 <td>${registered.tanggal}</td>
                                                 <td>${registered.jam}</td>
                                                 <td>${registered.tempat}</td>
