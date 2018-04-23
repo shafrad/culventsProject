@@ -8,6 +8,7 @@ var pesanEventsSchema = new mongoose.Schema({
   jam: {type: String, required: true},
   tempat: {type: String, required: true},
   event_id: {type: mongoose.Schema.Types.ObjectId, ref: 'Events', required:true},  
+  kode: {type: String, required: true},
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
