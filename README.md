@@ -14,7 +14,7 @@ This application used to manage any events, so the users can simply the reservat
 
 ## Use Case Diagram
 <p align="center">
-  <img src="http://gdurl.com/rCmz" width="1000"/> 
+  <img src="http://gdurl.com/rCmz" width="800"/> 
 </p>
 
 ## Development Tools
