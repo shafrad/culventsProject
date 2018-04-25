@@ -26,7 +26,15 @@ This application used to manage any events, so the users can simply the reservat
 * AJAX
 
 ## Usage
+NB : because this apps used the mailgun API for free, so you must have email address that you will use for register in this applications. In this case, i'll suggest you to create [ email address ](http://www.fakemailgenerator.com) then sign up into [mailgun](https://www.mailgun.com) by the email address that you have created before. After the email address have been created, follow the steps below :
+1. Sign up into mailgun.
+2. You will get the API key and domain by default.
+3. 
 
-
+```
+npm i
+npm run seed
+npm start
+```
 
 #### License ISC
