@@ -26,12 +26,14 @@ This application used to manage any events, so the users can simply the reservat
 * AJAX
 
 ## Usage
-NB : because this apps used the mailgun API for free, so you must have email address that you will use for register in this applications. In this case, i'll suggest you to create [ email address ](http://www.fakemailgenerator.com) then sign up into [mailgun](https://www.mailgun.com) by the email address that you have created before. After the email address have been created, follow the steps below :
+NB : because this apps used the mailgun API for free, so you must have email address that you will use for register in this applications. In this case, i'll suggest you to create [ email address ](https://emailfake.com/) then sign up into [mailgun](https://www.mailgun.com) by the email address that you have created before. After the email address have been created, follow the steps below :
 1. Sign up into mailgun.
-2. You will get the API key and domain by default.
-3. 
+2. You will get the API key in home menu and the Domain in the domain menu by default in your account.
+3. Then copy and paste the private API key and the Domain Name into routes/config.js with their suitable field.
+Congrats! Your app's ready to run and type this commands into terminal :
 
 ```
+/get/your/directory/of/the/apps
 npm i
 npm run seed
 npm start
