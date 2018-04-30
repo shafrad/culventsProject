@@ -26,14 +26,22 @@ This application used to manage any events, so the users can simply the reservat
 * AJAX
 
 ## Usage
-NB : because this apps used the mailgun API for free, so you must have email address that you will use for register in this applications. In this case, i'll suggest you to create [ email address ](https://emailfake.com/) then sign up into [mailgun](https://www.mailgun.com) by the email address that you have created before. After the email address have been created, follow the steps below :
-1. Sign up into mailgun.
-2. You will get the API key in home menu and the Domain in the domain menu by default in your account.
-3. Then copy and paste the private API key and the Domain Name into routes/config.js with their suitable field.
+NB : because this apps used the mailgun API for free, so you must have email address that you will use for register in this applications. In this case, i'll suggest you to create [ email address ](https://emailfake.com/) then sign up into [mailgun](https://www.mailgun.com) by the email address that you have created before. After the email address have been created and you have been signed up into mailgun, follow the steps below :
+1. You will get the API key in home menu and the Domain in the domain menu by default in your account.
+2. Then copy and paste the private API key and the Domain Name into routes/config.js with their suitable field.
+ 
+* The first thing that you have to be done is you must register your email address before to this apps for the users login.
+* For the admin, you can use admin@culvents.com for email and the default password is admin.
+
 Congrats! Your app's ready to run and type this commands into terminal :
 
 ```
-/get/your/directory/of/the/apps
+$ cd /into/your/directory/of/the/apps
+```
+
+then,
+
+```
 npm i
 npm run seed
 npm start
