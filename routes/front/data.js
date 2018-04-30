@@ -85,7 +85,7 @@ exports.showById = (request, result, next) => {
                     }
                     else {
                         result.end("Event's has been fulfilled!");
-                        result.render('../views/back/show', {event: globalEvent, register: register});
+                        result.render('../views/back/show', {event: globalEvent, register: register, login: loginController.login});
                         
                     }
                 
@@ -193,7 +193,7 @@ exports.showById = (request, result, next) => {
                           mailgun.messages().send(data, function (error, body) {
                             console.log(body);
                           });
-                        result.render('../views/back/show', {event: globalEvent, register: register});
+                        result.render('../views/back/show', {event: globalEvent, register: register, login: loginController.login});
                         
                     }}
                 )
@@ -205,7 +205,7 @@ exports.showById = (request, result, next) => {
             }
             else { //sudah terdaftar
                 var register = true;
-                result.render('../views/back/show', {event: globalEvent, register: register})
+                result.render('../views/back/show', {event: globalEvent, register: register, login: loginController.login})
                 
             } 
             })  

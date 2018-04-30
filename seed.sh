@@ -1,0 +1,1 @@
+mongoimport --host=127.0.0.1 --db myproject --collection userprofile --file ./db/userprofile.json --jsonArray
